@@ -57,11 +57,11 @@
             const perf = performance.now();
             if (stampTool != undefined) {
                 k = (k + 0.07) % 16;
-                for (var i = 0; i < 20; i++) {
+                for (var i = 0; i < 1000; i++) {
                     var x = Math.floor(Math.random() * picto.imageBuffer.width);
                     var y = Math.floor(Math.random() * picto.imageBuffer.height);
                     stampTool.setColor(Math.floor(k));
-                    stampTool.setScale(Math.ceil(Math.random() * 32));
+                    stampTool.setScale(Math.ceil(Math.random() * 16));
                     stampTool.writeStampToWorkBuffer(x, y);
                 }
                 stampTool.commitWorkBuffer();
