@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Page Title</title>
+    <script src="./js/Pictopup.js"></script>
+    <style>
+        canvas {
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+    <!--link rel='stylesheet' href='main.css'-->
+</head>
+
+<body>
+    <div id="output"></div>
+
+    <script>
+        var picto = new pictopup.Pictopup(document.getElementById("output"));
+        var stampTool;
+
+        // load in pawprint stamp for testing
+        var image = new Image();
+        image.onload = function (e) {
+            var canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+            var ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+
+            ctx.drawImage(image, 0, 0);
+            var imageData = ctx.getImageData(0, 0, image.width, image.height);
+
+            stampTool = new pictopup.StampTool(picto);
+            stampTool.loadStampFromImageData(imageData);
+            stampTool.setScale(image.height);
+        }
+
+        image.crossOrigin = "anonymous";
+        image.src = "https://i.imgur.com/hFKcrrA.png"; // pawprint
+
+        function waitForVBlank() {
+            return new Promise(resolve => {
+                window.requestAnimationFrame(resolve);
+            });
+        }
+
+        var k = 1;
+
+        var meth = async function (h) {
+
+            const perf = performance.now();
+            if (stampTool != undefined) {
+                k = (k + 0.07) % 16;
+                for (var i = 0; i < 20; i++) {
+                    var x = Math.floor(Math.random() * picto.imageBuffer.width);
+                    var y = Math.floor(Math.random() * picto.imageBuffer.height);
+                    stampTool.setColor(Math.floor(k));
+                    stampTool.setScale(Math.ceil(Math.random() * 32));
+                    stampTool.writeStampToWorkBuffer(x, y);
+                }
+                stampTool.commitWorkBuffer();
+                // console.log(performance.now() - perf);
+
+                await picto.render();
+            }
+
+            window.requestAnimationFrame(meth);
+        }
+
+        window.requestAnimationFrame(meth);
+    </script>
+</body>
+
+</html>
