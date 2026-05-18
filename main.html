@@ -7,6 +7,10 @@
     <title>Page Title</title>
     <script src="./js/Pictopup.js"></script>
     <style>
+        body {
+            background-color: #e2dfb2;
+        }
+
         canvas {
             image-rendering: -moz-crisp-edges;
             image-rendering: -webkit-optimize-contrast;
@@ -38,7 +42,9 @@
 
             stampTool = new pictopup.StampTool(picto);
             stampTool.loadStampFromImageData(imageData);
-            stampTool.setScale(image.height);
+            stampTool.setScale(12);
+
+            picto.currentTool = stampTool;
         }
 
         image.crossOrigin = "anonymous";
@@ -53,22 +59,7 @@
         var k = 1;
 
         var meth = async function (h) {
-
-            const perf = performance.now();
-            if (stampTool != undefined) {
-                k = (k + 0.07) % 16;
-                for (var i = 0; i < 1000; i++) {
-                    var x = Math.floor(Math.random() * picto.imageBuffer.width);
-                    var y = Math.floor(Math.random() * picto.imageBuffer.height);
-                    stampTool.setColor(Math.floor(k));
-                    stampTool.setScale(Math.ceil(Math.random() * 16));
-                    stampTool.writeStampToWorkBuffer(x, y);
-                }
-                stampTool.commitWorkBuffer();
-                // console.log(performance.now() - perf);
-
-                await picto.render();
-            }
+            await picto.render();
 
             window.requestAnimationFrame(meth);
         }
