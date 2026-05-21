@@ -25,7 +25,7 @@
     <div id="output"></div>
 
     <script>
-        var picto = new pictopup.Pictopup(document.getElementById("output"));
+        var picto = new pictopup.Pictopup(document.getElementById("output"), 800, 600);
         var stampTool;
 
         // load in pawprint stamp for testing
@@ -40,7 +40,7 @@
             ctx.drawImage(image, 0, 0);
             var imageData = ctx.getImageData(0, 0, image.width, image.height);
 
-            stampTool = new pictopup.StampTool(picto);
+            stampTool = picto.toolbar.stampTool;
             stampTool.loadStampFromImageData(imageData);
             stampTool.setScale(12);
 
@@ -49,22 +49,6 @@
 
         image.crossOrigin = "anonymous";
         image.src = "https://i.imgur.com/hFKcrrA.png"; // pawprint
-
-        function waitForVBlank() {
-            return new Promise(resolve => {
-                window.requestAnimationFrame(resolve);
-            });
-        }
-
-        var k = 1;
-
-        var meth = async function (h) {
-            await picto.render();
-
-            window.requestAnimationFrame(meth);
-        }
-
-        window.requestAnimationFrame(meth);
     </script>
 </body>
 
